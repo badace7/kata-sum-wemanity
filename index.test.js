@@ -1,10 +1,20 @@
 const useCustomSeparatorHandler = (number) => {
     const foundDoubleSlash = number.search("//");
-    const foundNewLineChar = number.search('\n');
-    if(foundDoubleSlash === 0 && foundNewLineChar === 3) {
-        return {number: number.slice(0,5), delimiter: number[2]};
+
+    var delimiter = number.substring(
+        number.indexOf("/") + 2, 
+        number.lastIndexOf("\n")
+    );
+
+    var calcul = number.substring(
+        number.indexOf("\n") + 1, 
+    );
+
+    if(foundDoubleSlash === 0) {
+        return {number: calcul, delimiter: delimiter};
     }
-    return {number, delimiter: ','};
+    
+    return {number: number, delimiter: ','};
 };
 
 const add = (number) => {
@@ -52,3 +62,15 @@ test("returns error if last element not a number", () => {
 test("returns sum with custom separator", () => {
     expect(add('//;\n1;2')).toBe("3")
 });
+
+test("returns sum with custom separator", () => {
+    expect(add('//|\n1|2|3')).toBe("6")
+});
+
+test("returns sum with custom separator", () => {
+    expect(add('//sep\n2sep3')).toBe("5")
+});
+
+/*test("returns excption if wrong separator was used", () => {
+    expect(add('//|\n1|2,3')).toBe("'|' expected but ',' found at position 3.")
+});*/
